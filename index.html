@@ -1,1 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>Alien Messenger</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #050505, #14213d, #001f1f);
+      color: white;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 400px;
+      padding: 35px 25px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+    }
+
+    .logo {
+      font-size: 55px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #cfcfcf;
+      margin-bottom: 25px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      background: #00e5ff;
+      color: #001014;
+    }
+
+    .btn:hover {
+      background: #00bcd4;
+    }
+
+    .footer {
+      margin-top: 25px;
+      font-size: 13px;
+      color: #999;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="logo">👽</div>
+
+    <h1>Alien Messenger</h1>
+
+    <p>Connect. Chat. Share.</p>
+
+    <button class="btn" onclick="startMessenger()">
+      Enter Messenger
+    </button>
+
+    <div class="footer">
+      © 2026 Alien Messenger
+    </div>
+
+  </div>
+
+  <script>
+    function startMessenger() {
+      alert("Welcome to Alien Messenger!");
+    }
+  </script>
+
+</body>
+</html>
