@@ -238,6 +238,11 @@
 
           showMessage("Login successful! 👽");
 
+          // Login successful হলে Chat page-এ যাবে
+          setTimeout(() => {
+            window.location.href = "chat.html";
+          }, 500);
+
         } catch (error) {
 
           showMessage(
