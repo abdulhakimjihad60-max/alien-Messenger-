@@ -20,7 +20,6 @@ body{
   overflow:hidden;
 }
 
-/* MAIN APP */
 .app{
   display:flex;
   height:100vh;
@@ -280,13 +279,14 @@ body{
 }
 
 .profile-btn{
+  display:block;
   width:100%;
   background:#263246;
   color:white;
-  border:none;
   padding:10px;
   border-radius:8px;
   cursor:pointer;
+  text-align:center;
 }
 
 .file-input{
@@ -361,13 +361,14 @@ body{
   <aside class="sidebar">
 
     <div class="header">
+
       <div class="logo">👽 Alien</div>
 
       <div class="profile-small">
-        <img id="myPhoto"
-             src="https://i.imgur.com/6VBx3io.png">
+        <img id="myPhoto" src="https://i.imgur.com/6VBx3io.png">
         <span id="myName">User</span>
       </div>
+
     </div>
 
     <div class="users-title">Chats</div>
@@ -377,6 +378,7 @@ body{
     </div>
 
     <div class="profile-box">
+
       <label for="photoInput" class="profile-btn">
         📷 Change Profile Photo
       </label>
@@ -386,6 +388,7 @@ body{
         class="file-input"
         type="file"
         accept="image/*">
+
     </div>
 
   </aside>
@@ -400,6 +403,7 @@ body{
            src="https://i.imgur.com/6VBx3io.png">
 
       <div class="chat-person">
+
         <div id="chatName" class="chat-name">
           Select a person
         </div>
@@ -407,6 +411,7 @@ body{
         <div id="chatStatus" class="chat-status">
           Choose someone to chat
         </div>
+
       </div>
 
       <button id="logoutBtn" class="logout">
@@ -474,10 +479,10 @@ import {
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-/* FIREBASE */
+/* FIREBASE CONFIG */
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDUMMY_REPLACE_WITH_YOUR_EXISTING_KEY",
+  apiKey: "AIzaSyB6DFVQNrPmKtshg978khg7GAKCrS69ANU",
   authDomain: "alien-pori---chat.firebaseapp.com",
   projectId: "alien-pori---chat",
   storageBucket: "alien-pori---chat.firebasestorage.app",
@@ -485,6 +490,7 @@ const firebaseConfig = {
   appId: "1:141609051933:web:7abdb1828986b5a29ee3f4",
   measurementId: "G-KC5NKQ57H6"
 };
+
 
 const app = initializeApp(firebaseConfig);
 
@@ -495,9 +501,11 @@ const db = getFirestore(app);
 
 /* ELEMENTS */
 
-const usersBox = document.getElementById("users");
+const usersBox =
+document.getElementById("users");
 
-const messagesBox = document.getElementById("messages");
+const messagesBox =
+document.getElementById("messages");
 
 const messageInput =
 document.getElementById("messageInput");
@@ -534,8 +542,6 @@ let selectedUser = null;
 let unsubscribeMessages = null;
 
 
-/* DEFAULT PHOTO */
-
 const defaultPhoto =
 "https://i.imgur.com/6VBx3io.png";
 
@@ -556,16 +562,31 @@ onAuthStateChanged(auth, async (user) => {
   myName.textContent =
   user.email || "User";
 
-  await createOrUpdateMyProfile();
+  try{
 
-  await loadMyProfile();
+    await createOrUpdateMyProfile();
 
-  await loadUsers();
+    await loadMyProfile();
+
+    await loadUsers();
+
+  }catch(error){
+
+    console.error(error);
+
+    usersBox.innerHTML =
+    `<div class="empty">
+      Firebase error
+      <br>
+      ${escapeHtml(error.message)}
+    </div>`;
+
+  }
 
 });
 
 
-/* CREATE USER PROFILE */
+/* CREATE PROFILE */
 
 async function createOrUpdateMyProfile(){
 
@@ -627,13 +648,15 @@ async function loadMyProfile(){
 
   if(snap.exists()){
 
-    const data = snap.data();
+    const data =
+    snap.data();
 
     myName.textContent =
     data.name || currentUser.email;
 
     myPhoto.src =
     data.photo || defaultPhoto;
+
   }
 
 }
@@ -646,47 +669,34 @@ async function loadUsers(){
   usersBox.innerHTML =
   `<div class="empty">Loading users...</div>`;
 
-  try{
+  const snap =
+  await getDocs(
+    collection(db,"users")
+  );
 
-    const snap =
-    await getDocs(
-      collection(db,"users")
-    );
+  usersBox.innerHTML = "";
 
-    usersBox.innerHTML = "";
+  let count = 0;
 
-    let count = 0;
+  snap.forEach((docSnap)=>{
 
-    snap.forEach((docSnap)=>{
+    const data =
+    docSnap.data();
 
-      const data =
-      docSnap.data();
+    if(data.uid === currentUser.uid)
+      return;
 
-      if(data.uid === currentUser.uid)
-        return;
+    count++;
 
-      count++;
+    createUserItem(data);
 
-      createUserItem(data);
+  });
 
-    });
-
-    if(count === 0){
-
-      usersBox.innerHTML =
-      `<div class="empty">
-        No other users yet
-      </div>`;
-
-    }
-
-  }catch(error){
-
-    console.error(error);
+  if(count === 0){
 
     usersBox.innerHTML =
     `<div class="empty">
-      Unable to load users
+      No other users yet
     </div>`;
 
   }
@@ -771,7 +781,9 @@ function selectUser(user){
   : "Offline";
 
   messagesBox.innerHTML =
-  `<div class="empty">Loading messages...</div>`;
+  `<div class="empty">
+    Loading messages...
+  </div>`;
 
   messageInput.focus();
 
@@ -785,8 +797,8 @@ function selectUser(user){
 function getChatId(uid1,uid2){
 
   return [uid1,uid2]
-    .sort()
-    .join("_");
+  .sort()
+  .join("_");
 
 }
 
@@ -880,7 +892,9 @@ function listenMessages(){
 
           ${
             mine && data.seen
-            ? `<span class="seen">Seen ✓</span>`
+            ? `<span class="seen">
+                Seen ✓
+              </span>`
             : ""
           }
 
@@ -890,7 +904,7 @@ function listenMessages(){
 
       messagesBox.appendChild(message);
 
-      /* mark received message as seen */
+      /* MARK AS SEEN */
 
       if(
         !mine &&
@@ -923,7 +937,7 @@ function listenMessages(){
     `<div class="empty">
       Unable to load messages.
       <br><br>
-      Check Firestore Rules.
+      ${escapeHtml(error.message)}
     </div>`;
 
   });
@@ -1002,7 +1016,7 @@ async function sendMessage(){
 }
 
 
-/* SEND BUTTON */
+/* SEND */
 
 sendBtn.addEventListener(
   "click",
@@ -1068,7 +1082,9 @@ photoInput.addEventListener(
 
       await loadUsers();
 
-      alert("Profile photo updated! 👽");
+      alert(
+        "Profile photo updated! 👽"
+      );
 
     }catch(error){
 
@@ -1095,7 +1111,8 @@ function resizeImage(file){
       const reader =
       new FileReader();
 
-      reader.onload = (event)=>{
+      reader.onload =
+      (event)=>{
 
         const img =
         new Image();
@@ -1105,8 +1122,7 @@ function resizeImage(file){
           const canvas =
           document.createElement("canvas");
 
-          const max =
-          300;
+          const max = 300;
 
           let width =
           img.width;
