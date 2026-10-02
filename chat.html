@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alien Messenger</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #111827;
+      color: white;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      background: #1f2937;
+      padding: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #374151;
+    }
+
+    .logo {
+      font-size: 21px;
+      font-weight: bold;
+    }
+
+    .logout {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 9px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .chat {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .welcome {
+      text-align: center;
+      margin-top: 40px;
+      color: #9ca3af;
+    }
+
+    .message-box {
+      display: flex;
+      padding: 12px;
+      background: #1f2937;
+      border-top: 1px solid #374151;
+    }
+
+    .message-box input {
+      flex: 1;
+      padding: 13px;
+      border: none;
+      outline: none;
+      border-radius: 8px;
+      background: #374151;
+      color: white;
+      font-size: 15px;
+    }
+
+    .send {
+      margin-left: 8px;
+      padding: 0 18px;
+      border: none;
+      border-radius: 8px;
+      background: #2563eb;
+      color: white;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="header">
+    <div class="logo">👽 Alien Messenger</div>
+    <button class="logout" id="logoutBtn">Logout</button>
+  </div>
+
+  <div class="chat" id="chat">
+    <div class="welcome">
+      <h2>Welcome to Alien Messenger 👽</h2>
+      <p>Your login was successful!</p>
+    </div>
+  </div>
+
+  <div class="message-box">
+    <input type="text" id="messageInput" placeholder="Type a message...">
+    <button class="send" id="sendBtn">Send</button>
+  </div>
+
+  <script type="module">
+
+    import { initializeApp }
+      from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+    import {
+      getAuth,
+      signOut
+    }
+      from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "alien-pori---chat.firebaseapp.com",
+      projectId: "alien-pori---chat",
+      storageBucket: "alien-pori---chat.firebasestorage.app",
+      messagingSenderId: "141609051933",
+      appId: "1:141609051933:web:7abdb1828986b5a29ee3f4"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+      await signOut(auth);
+      window.location.href = "login.html";
+    });
+
+    document.getElementById("sendBtn").addEventListener("click", () => {
+
+      const input = document.getElementById("messageInput");
+      const message = input.value.trim();
+
+      if (message === "") return;
+
+      const chat = document.getElementById("chat");
+
+      const div = document.createElement("div");
+
+      div.style.background = "#2563eb";
+      div.style.padding = "10px 14px";
+      div.style.borderRadius = "10px";
+      div.style.margin = "8px 0";
+      div.style.marginLeft = "auto";
+      div.style.maxWidth = "75%";
+      div.style.width = "fit-content";
+
+      div.textContent = message;
+
+      chat.appendChild(div);
+
+      input.value = "";
+      chat.scrollTop = chat.scrollHeight;
+    });
+
+  </script>
+
+</body>
+</html>
