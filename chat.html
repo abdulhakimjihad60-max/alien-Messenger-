@@ -78,19 +78,32 @@ body{
   flex:1;
 }
 
-/* USER */
+/* USER BUTTON */
 .user{
+  width:100%;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:white;
+
   padding:12px 15px;
+
   display:flex;
   align-items:center;
   gap:12px;
+
   cursor:pointer;
-  transition:.2s;
+
+  text-align:left;
+
   user-select:none;
   -webkit-user-select:none;
   -webkit-tap-highlight-color:transparent;
+
   touch-action:manipulation;
-  pointer-events:auto;
+
+  appearance:none;
+  -webkit-appearance:none;
 }
 
 .user:hover{
@@ -108,6 +121,7 @@ body{
 .avatar{
   position:relative;
   flex-shrink:0;
+  pointer-events:none;
 }
 
 .avatar img{
@@ -379,22 +393,33 @@ body{
       <div class="logo">👽 Alien</div>
 
       <div class="profile-small">
-        <img id="myPhoto" src="https://i.imgur.com/6VBx3io.png">
+        <img
+          id="myPhoto"
+          src="https://i.imgur.com/6VBx3io.png"
+          alt="My profile">
         <span id="myName">User</span>
       </div>
 
     </div>
 
-    <div class="users-title">Chats</div>
+    <div class="users-title">
+      Chats
+    </div>
 
     <div id="users" class="users">
-      <div class="empty">Loading users...</div>
+      <div class="empty">
+        Loading users...
+      </div>
     </div>
 
     <div class="profile-box">
 
-      <label for="photoInput" class="profile-btn">
+      <label
+        for="photoInput"
+        class="profile-btn">
+
         📷 Change Profile Photo
+
       </label>
 
       <input
@@ -413,29 +438,45 @@ body{
 
     <div class="chat-header">
 
-      <img id="chatPhoto"
-           src="https://i.imgur.com/6VBx3io.png">
+      <img
+        id="chatPhoto"
+        src="https://i.imgur.com/6VBx3io.png"
+        alt="Chat">
 
       <div class="chat-person">
 
-        <div id="chatName" class="chat-name">
+        <div
+          id="chatName"
+          class="chat-name">
+
           Select a person
+
         </div>
 
-        <div id="chatStatus" class="chat-status">
+        <div
+          id="chatStatus"
+          class="chat-status">
+
           Choose someone to chat
+
         </div>
 
       </div>
 
-      <button id="logoutBtn" class="logout">
+      <button
+        id="logoutBtn"
+        class="logout">
+
         Logout
+
       </button>
 
     </div>
 
 
-    <div id="messages" class="messages">
+    <div
+      id="messages"
+      class="messages">
 
       <div class="empty">
         👽 Select a user to start chatting
@@ -452,8 +493,13 @@ body{
         placeholder="Type a message..."
         autocomplete="off">
 
-      <button id="sendBtn" class="send">
+      <button
+        id="sendBtn"
+        class="send"
+        type="button">
+
         ➤
+
       </button>
 
     </div>
@@ -496,37 +542,81 @@ from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 /* FIREBASE CONFIG */
 
 const firebaseConfig = {
-  apiKey: "AIzaSyB6DFVQNrPmKtshg978khg7GAKCrS69ANU",
-  authDomain: "alien-pori---chat.firebaseapp.com",
-  projectId: "alien-pori---chat",
-  storageBucket: "alien-pori---chat.firebasestorage.app",
-  messagingSenderId: "141609051933",
-  appId: "1:141609051933:web:7abdb1828986b5a29ee3f4",
-  measurementId: "G-KC5NKQ57H6"
+
+  apiKey:
+  "AIzaSyB6DFVQNrPmKtshg978khg7GAKCrS69ANU",
+
+  authDomain:
+  "alien-pori---chat.firebaseapp.com",
+
+  projectId:
+  "alien-pori---chat",
+
+  storageBucket:
+  "alien-pori---chat.firebasestorage.app",
+
+  messagingSenderId:
+  "141609051933",
+
+  appId:
+  "1:141609051933:web:7abdb1828986b5a29ee3f4",
+
+  measurementId:
+  "G-KC5NKQ57H6"
+
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+
+const app =
+initializeApp(firebaseConfig);
+
+const auth =
+getAuth(app);
+
+const db =
+getFirestore(app);
 
 
 /* ELEMENTS */
 
-const usersBox = document.getElementById("users");
-const messagesBox = document.getElementById("messages");
-const messageInput = document.getElementById("messageInput");
-const sendBtn = document.getElementById("sendBtn");
-const logoutBtn = document.getElementById("logoutBtn");
-const myPhoto = document.getElementById("myPhoto");
-const myName = document.getElementById("myName");
-const chatPhoto = document.getElementById("chatPhoto");
-const chatName = document.getElementById("chatName");
-const chatStatus = document.getElementById("chatStatus");
-const photoInput = document.getElementById("photoInput");
+const usersBox =
+document.getElementById("users");
+
+const messagesBox =
+document.getElementById("messages");
+
+const messageInput =
+document.getElementById("messageInput");
+
+const sendBtn =
+document.getElementById("sendBtn");
+
+const logoutBtn =
+document.getElementById("logoutBtn");
+
+const myPhoto =
+document.getElementById("myPhoto");
+
+const myName =
+document.getElementById("myName");
+
+const chatPhoto =
+document.getElementById("chatPhoto");
+
+const chatName =
+document.getElementById("chatName");
+
+const chatStatus =
+document.getElementById("chatStatus");
+
+const photoInput =
+document.getElementById("photoInput");
 
 
 let currentUser = null;
+
 let selectedUser = null;
+
 let unsubscribeMessages = null;
 
 
@@ -536,114 +626,156 @@ const defaultPhoto =
 
 /* AUTH */
 
-onAuthStateChanged(auth, async (user) => {
+onAuthStateChanged(
+  auth,
+  async function(user){
 
-  if(!user){
+    if(!user){
 
-    window.location.href = "login.html";
+      window.location.href =
+      "login.html";
 
-    return;
+      return;
+
+    }
+
+    currentUser = user;
+
+    myName.textContent =
+    user.email || "User";
+
+
+    try{
+
+      await createOrUpdateMyProfile();
+
+      await loadMyProfile();
+
+      await loadUsers();
+
+    }catch(error){
+
+      console.error(error);
+
+      usersBox.innerHTML =
+      `
+      <div class="empty">
+
+        Firebase error
+
+        <br><br>
+
+        ${escapeHtml(error.message)}
+
+      </div>
+      `;
+
+    }
+
   }
-
-  currentUser = user;
-
-  myName.textContent =
-  user.email || "User";
-
-  try{
-
-    await createOrUpdateMyProfile();
-
-    await loadMyProfile();
-
-    await loadUsers();
-
-  }catch(error){
-
-    console.error(error);
-
-    usersBox.innerHTML =
-    `<div class="empty">
-      Firebase error
-      <br>
-      ${escapeHtml(error.message)}
-    </div>`;
-
-  }
-
-});
+);
 
 
-/* CREATE / UPDATE PROFILE */
+/* CREATE PROFILE */
 
 async function createOrUpdateMyProfile(){
 
   const ref =
-  doc(db,"users",currentUser.uid);
+  doc(
+    db,
+    "users",
+    currentUser.uid
+  );
+
 
   const existing =
   await getDoc(ref);
 
+
   if(!existing.exists()){
 
-    await setDoc(ref,{
+    await setDoc(
+      ref,
+      {
 
-      uid:currentUser.uid,
+        uid:
+        currentUser.uid,
 
-      email:currentUser.email || "",
+        email:
+        currentUser.email || "",
 
-      name:
-      currentUser.email
-      ? currentUser.email.split("@")[0]
-      : "User",
+        name:
+        currentUser.email
+        ? currentUser.email.split("@")[0]
+        : "User",
 
-      photo:defaultPhoto,
+        photo:
+        defaultPhoto,
 
-      online:true,
+        online:
+        true,
 
-      lastSeen:serverTimestamp(),
+        lastSeen:
+        serverTimestamp(),
 
-      createdAt:serverTimestamp()
+        createdAt:
+        serverTimestamp()
 
-    });
+      }
+    );
 
   }else{
 
-    await updateDoc(ref,{
+    await updateDoc(
+      ref,
+      {
 
-      online:true,
+        online:
+        true,
 
-      lastSeen:serverTimestamp(),
+        lastSeen:
+        serverTimestamp(),
 
-      email:currentUser.email || ""
+        email:
+        currentUser.email || ""
 
-    });
+      }
+    );
 
   }
 
 }
 
 
-/* LOAD MY PROFILE */
+/* MY PROFILE */
 
 async function loadMyProfile(){
 
-  const ref =
-  doc(db,"users",currentUser.uid);
-
   const snap =
-  await getDoc(ref);
+  await getDoc(
+    doc(
+      db,
+      "users",
+      currentUser.uid
+    )
+  );
+
 
   if(snap.exists()){
 
     const data =
     snap.data();
 
+
     myName.textContent =
-    data.name || currentUser.email;
+    data.name ||
+    currentUser.email ||
+    "User";
+
 
     myPhoto.src =
-    data.photo || defaultPhoto;
+    data.photo ||
+    defaultPhoto;
 
   }
 
@@ -655,136 +787,238 @@ async function loadMyProfile(){
 async function loadUsers(){
 
   usersBox.innerHTML =
-  `<div class="empty">Loading users...</div>`;
+  `
+  <div class="empty">
+    Loading users...
+  </div>
+  `;
+
 
   const snap =
   await getDocs(
-    collection(db,"users")
+    collection(
+      db,
+      "users"
+    )
   );
+
 
   usersBox.innerHTML = "";
 
+
   let count = 0;
 
-  snap.forEach((docSnap)=>{
 
-    const data =
-    docSnap.data();
+  snap.forEach(
+    function(docSnap){
 
-    if(data.uid === currentUser.uid)
-      return;
+      const data =
+      docSnap.data();
 
-    count++;
 
-    createUserItem(data);
+      if(
+        data.uid ===
+        currentUser.uid
+      ){
 
-  });
+        return;
+
+      }
+
+
+      count++;
+
+      createUserButton(data);
+
+    }
+  );
+
 
   if(count === 0){
 
     usersBox.innerHTML =
-    `<div class="empty">
+    `
+    <div class="empty">
+
       No other users yet
-    </div>`;
+
+    </div>
+    `;
 
   }
 
 }
 
 
-/* USER ITEM */
+/* CREATE USER BUTTON */
 
-function createUserItem(data){
+function createUserButton(data){
 
-  const item =
-  document.createElement("div");
+  const button =
+  document.createElement("button");
 
-  item.className = "user";
 
-  item.style.cursor = "pointer";
-  item.style.pointerEvents = "auto";
-  item.style.touchAction = "manipulation";
+  button.type =
+  "button";
+
+
+  button.className =
+  "user";
+
 
   const photo =
-  data.photo || defaultPhoto;
-
-  item.innerHTML = `
-
-    <div class="avatar">
-
-      <img
-        src="${photo}"
-        alt="User">
-
-      ${
-        data.online
-        ? `<div class="online-dot"></div>`
-        : ""
-      }
-
-    </div>
-
-    <div class="user-info">
-
-      <div class="user-name">
-        ${escapeHtml(data.name || "User")}
-      </div>
-
-      <div class="user-email">
-        ${escapeHtml(data.email || "")}
-      </div>
-
-    </div>
-
-  `;
+  data.photo ||
+  defaultPhoto;
 
 
-  /* CLICK */
+  const avatar =
+  document.createElement("div");
 
-  item.addEventListener("click", function(){
-
-    selectThisUser(item, data);
-
-  });
+  avatar.className =
+  "avatar";
 
 
-  /* MOBILE TOUCH */
+  const img =
+  document.createElement("img");
 
-  item.addEventListener("touchend", function(e){
+  img.src =
+  photo;
 
-    e.preventDefault();
-
-    selectThisUser(item, data);
-
-  }, {passive:false});
+  img.alt =
+  "User";
 
 
-  usersBox.appendChild(item);
+  avatar.appendChild(img);
+
+
+  if(data.online){
+
+    const dot =
+    document.createElement("div");
+
+    dot.className =
+    "online-dot";
+
+    avatar.appendChild(dot);
+
+  }
+
+
+  const info =
+  document.createElement("div");
+
+  info.className =
+  "user-info";
+
+
+  const name =
+  document.createElement("div");
+
+  name.className =
+  "user-name";
+
+  name.textContent =
+  data.name ||
+  "User";
+
+
+  const email =
+  document.createElement("div");
+
+  email.className =
+  "user-email";
+
+  email.textContent =
+  data.email ||
+  "";
+
+
+  info.appendChild(name);
+
+  info.appendChild(email);
+
+
+  button.appendChild(avatar);
+
+  button.appendChild(info);
+
+
+  /* MAIN CLICK */
+
+  button.onclick =
+  function(){
+
+    selectThisUser(
+      button,
+      data
+    );
+
+  };
+
+
+  /* TOUCH */
+
+  button.addEventListener(
+    "touchend",
+    function(e){
+
+      e.preventDefault();
+
+      selectThisUser(
+        button,
+        data
+      );
+
+    },
+    {
+      passive:false
+    }
+  );
+
+
+  usersBox.appendChild(button);
 
 }
 
 
 /* SELECT USER */
 
-function selectThisUser(item, data){
+function selectThisUser(
+  button,
+  data
+){
 
   document
   .querySelectorAll(".user")
-  .forEach(function(x){
+  .forEach(
+    function(x){
 
-    x.classList.remove("active");
+      x.classList.remove(
+        "active"
+      );
 
-  });
+    }
+  );
 
-  item.classList.add("active");
 
-  selectedUser = data;
+  button.classList.add(
+    "active"
+  );
+
+
+  selectedUser =
+  data;
+
 
   chatName.textContent =
-  data.name || "User";
+  data.name ||
+  "User";
+
 
   chatPhoto.src =
-  data.photo || defaultPhoto;
+  data.photo ||
+  defaultPhoto;
+
 
   if(data.online){
 
@@ -804,12 +1038,17 @@ function selectThisUser(item, data){
 
   }
 
+
   messagesBox.innerHTML =
-  `<div class="empty">
+  `
+  <div class="empty">
     Loading messages...
-  </div>`;
+  </div>
+  `;
+
 
   messageInput.focus();
+
 
   listenMessages();
 
@@ -818,16 +1057,22 @@ function selectThisUser(item, data){
 
 /* CHAT ID */
 
-function getChatId(uid1,uid2){
+function getChatId(
+  uid1,
+  uid2
+){
 
-  return [uid1,uid2]
+  return [
+    uid1,
+    uid2
+  ]
   .sort()
   .join("_");
 
 }
 
 
-/* REAL-TIME MESSAGES */
+/* LISTEN MESSAGES */
 
 function listenMessages(){
 
@@ -835,12 +1080,18 @@ function listenMessages(){
 
     unsubscribeMessages();
 
-    unsubscribeMessages = null;
+    unsubscribeMessages =
+    null;
 
   }
 
-  if(!selectedUser)
+
+  if(!selectedUser){
+
     return;
+
+  }
+
 
   const chatId =
   getChatId(
@@ -848,143 +1099,196 @@ function listenMessages(){
     selectedUser.uid
   );
 
+
   const q =
   query(
 
-    collection(db,"messages"),
+    collection(
+      db,
+      "messages"
+    ),
 
-    where("chatId","==",chatId),
+    where(
+      "chatId",
+      "==",
+      chatId
+    ),
 
-    orderBy("createdAt","asc")
+    orderBy(
+      "createdAt",
+      "asc"
+    )
 
   );
 
 
   unsubscribeMessages =
-  onSnapshot(q,(snapshot)=>{
+  onSnapshot(
+    q,
 
-    messagesBox.innerHTML = "";
-
-    if(snapshot.empty){
+    function(snapshot){
 
       messagesBox.innerHTML =
-      `<div class="empty">
-        👽 Say hello!
-      </div>`;
-
-      return;
-
-    }
+      "";
 
 
-    snapshot.forEach((docSnap)=>{
+      if(snapshot.empty){
 
-      const data =
-      docSnap.data();
+        messagesBox.innerHTML =
+        `
+        <div class="empty">
+          👽 Say hello!
+        </div>
+        `;
 
-      const message =
-      document.createElement("div");
-
-      const mine =
-      data.senderUid === currentUser.uid;
-
-      message.className =
-      "message " +
-      (mine ? "mine" : "theirs");
-
-
-      let time = "";
-
-      if(data.createdAt){
-
-        try{
-
-          time =
-          data.createdAt
-          .toDate()
-          .toLocaleTimeString(
-            [],
-            {
-              hour:"2-digit",
-              minute:"2-digit"
-            }
-          );
-
-        }catch(e){}
+        return;
 
       }
 
 
-      message.innerHTML = `
+      snapshot.forEach(
+        function(docSnap){
 
-        ${escapeHtml(data.text || "")}
+          const data =
+          docSnap.data();
 
-        <span class="message-time">
 
-          ${time}
+          const message =
+          document.createElement(
+            "div"
+          );
 
-          ${
-            mine && data.seen
-            ? `<span class="seen">
-                Seen ✓
-              </span>`
-            : ""
+
+          const mine =
+          data.senderUid ===
+          currentUser.uid;
+
+
+          message.className =
+          "message " +
+          (
+            mine
+            ? "mine"
+            : "theirs"
+          );
+
+
+          let time =
+          "";
+
+
+          if(data.createdAt){
+
+            try{
+
+              time =
+              data.createdAt
+              .toDate()
+              .toLocaleTimeString(
+                [],
+                {
+                  hour:"2-digit",
+                  minute:"2-digit"
+                }
+              );
+
+            }catch(e){}
+
           }
 
-        </span>
 
+          message.innerHTML =
+          `
+          ${escapeHtml(
+            data.text || ""
+          )}
+
+          <span class="message-time">
+
+            ${time}
+
+            ${
+              mine &&
+              data.seen
+
+              ? `
+                <span class="seen">
+                  Seen ✓
+                </span>
+                `
+
+              : ""
+            }
+
+          </span>
+          `;
+
+
+          messagesBox.appendChild(
+            message
+          );
+
+
+          /* MARK SEEN */
+
+          if(
+            !mine &&
+            !data.seen
+          ){
+
+            updateDoc(
+              doc(
+                db,
+                "messages",
+                docSnap.id
+              ),
+              {
+                seen:true
+              }
+            ).catch(
+              function(error){
+
+                console.error(
+                  "Seen error:",
+                  error
+                );
+
+              }
+            );
+
+          }
+
+        }
+      );
+
+
+      messagesBox.scrollTop =
+      messagesBox.scrollHeight;
+
+    },
+
+    function(error){
+
+      console.error(error);
+
+
+      messagesBox.innerHTML =
+      `
+      <div class="empty">
+
+        Unable to load messages.
+
+        <br><br>
+
+        ${escapeHtml(
+          error.message
+        )}
+
+      </div>
       `;
 
-
-      messagesBox.appendChild(message);
-
-
-      /* MARK AS SEEN */
-
-      if(
-        !mine &&
-        !data.seen
-      ){
-
-        updateDoc(
-          doc(
-            db,
-            "messages",
-            docSnap.id
-          ),
-          {
-            seen:true
-          }
-        ).catch((error)=>{
-
-          console.error(
-            "Seen update error:",
-            error
-          );
-
-        });
-
-      }
-
-    });
-
-
-    messagesBox.scrollTop =
-    messagesBox.scrollHeight;
-
-
-  },(error)=>{
-
-    console.error(error);
-
-    messagesBox.innerHTML =
-    `<div class="empty">
-      Unable to load messages.
-      <br><br>
-      ${escapeHtml(error.message)}
-    </div>`;
-
-  });
+    }
+  );
 
 }
 
@@ -997,8 +1301,11 @@ async function sendMessage(){
   messageInput.value.trim();
 
 
-  if(!text)
+  if(!text){
+
     return;
+
+  }
 
 
   if(!selectedUser){
@@ -1022,12 +1329,17 @@ async function sendMessage(){
   try{
 
     await addDoc(
-      collection(db,"messages"),
+      collection(
+        db,
+        "messages"
+      ),
       {
 
-        chatId:chatId,
+        chatId:
+        chatId,
 
-        text:text,
+        text:
+        text,
 
         senderUid:
         currentUser.uid,
@@ -1041,7 +1353,8 @@ async function sendMessage(){
         receiverEmail:
         selectedUser.email || "",
 
-        seen:false,
+        seen:
+        false,
 
         createdAt:
         serverTimestamp()
@@ -1050,7 +1363,8 @@ async function sendMessage(){
     );
 
 
-    messageInput.value = "";
+    messageInput.value =
+    "";
 
     messageInput.focus();
 
@@ -1060,8 +1374,8 @@ async function sendMessage(){
     console.error(error);
 
     alert(
-      "Message send failed: "
-      + error.message
+      "Message send failed: " +
+      error.message
     );
 
   }
@@ -1077,7 +1391,7 @@ sendBtn.addEventListener(
 );
 
 
-/* ENTER SEND */
+/* ENTER */
 
 messageInput.addEventListener(
   "keydown",
@@ -1104,11 +1418,19 @@ photoInput.addEventListener(
     const file =
     event.target.files[0];
 
-    if(!file)
+
+    if(!file){
+
       return;
 
+    }
 
-    if(!file.type.startsWith("image/")){
+
+    if(
+      !file.type.startsWith(
+        "image/"
+      )
+    ){
 
       alert(
         "Please select an image."
@@ -1132,12 +1454,15 @@ photoInput.addEventListener(
           currentUser.uid
         ),
         {
-          photo:photo
+          photo:
+          photo
         }
       );
 
 
-      myPhoto.src = photo;
+      myPhoto.src =
+      photo;
+
 
       await loadUsers();
 
@@ -1152,8 +1477,8 @@ photoInput.addEventListener(
       console.error(error);
 
       alert(
-        "Photo update failed: "
-        + error.message
+        "Photo update failed: " +
+        error.message
       );
 
     }
@@ -1162,7 +1487,7 @@ photoInput.addEventListener(
 );
 
 
-/* RESIZE IMAGE */
+/* RESIZE PHOTO */
 
 function resizeImage(file){
 
@@ -1189,7 +1514,9 @@ function resizeImage(file){
           );
 
 
-          const max = 300;
+          const max =
+          300;
+
 
           let width =
           img.width;
@@ -1198,14 +1525,19 @@ function resizeImage(file){
           img.height;
 
 
-          if(width > height){
+          if(
+            width > height
+          ){
 
             if(width > max){
 
               height =
-              height * max / width;
+              height *
+              max /
+              width;
 
-              width = max;
+              width =
+              max;
 
             }
 
@@ -1214,9 +1546,12 @@ function resizeImage(file){
             if(height > max){
 
               width =
-              width * max / height;
+              width *
+              max /
+              height;
 
-              height = max;
+              height =
+              max;
 
             }
 
@@ -1231,7 +1566,9 @@ function resizeImage(file){
 
 
           const ctx =
-          canvas.getContext("2d");
+          canvas.getContext(
+            "2d"
+          );
 
 
           ctx.drawImage(
@@ -1267,7 +1604,9 @@ function resizeImage(file){
       reject;
 
 
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(
+        file
+      );
 
     }
   );
@@ -1292,15 +1631,22 @@ logoutBtn.addEventListener(
             currentUser.uid
           ),
           {
-            online:false,
-            lastSeen:serverTimestamp()
+
+            online:
+            false,
+
+            lastSeen:
+            serverTimestamp()
+
           }
         );
 
       }
 
 
-      await signOut(auth);
+      await signOut(
+        auth
+      );
 
 
       window.location.href =
@@ -1325,7 +1671,9 @@ logoutBtn.addEventListener(
 function escapeHtml(text){
 
   const div =
-  document.createElement("div");
+  document.createElement(
+    "div"
+  );
 
   div.textContent =
   text;
